@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Eat Castle</title>
+       
+<!--Jquery mobile theme-->
+<link href="jquery-mobile/jquery.mobile-1.0.min.css" rel="stylesheet" type="text/css"/>
+<script src="jquery-mobile/jquery-1.6.4.min.js" type="text/javascript"></script>
+<script src="jquery-mobile/jquery.mobile-1.0.min.js" type="text/javascript"></script>
+
+<!--slider theme-->
+<script src="jquery-mobile/jquery.blueberry.js"></script>
+<script type="text/javascript" charset="utf-8" src="jquery-mobile/cordova-2.2.0.js">
+</script>
+<script>
+$(window).load(function() {
+	$('.blueberry').blueberry();
+});
+</script>
+<!--For image slider-->
+<link rel="stylesheet" href="jquery-mobile/blueberry.css" />
+<script language="javascript" type="application/javascript">
+function autoredirect(){
+window.location = "newmap.html";
+}
+
+</script>
+<style type="text/css">
+
+* {
+	margin: 0 0 0 0;
+	border: 0;
+	padding: 0;
+}
+.blueberry {
+	max-width: 100%;
+}
+#page div a {
+	text-align: center;
+}
+
+</style>
+  
+<!--code to redirect--> 
+<script language="javascript" type="application/javascript">
+function goto()
+	{
+		var networkState = navigator.network.connection.type;
+		if (networkState == Connection.NONE){
+		 var result=confirm("Net connection problem? Choose from your favourite menu");
+					if (result== true)
+						{
+						 window.location = 'favourites.html';
+						}
+		}
+		else
+		{	
+		//var val = document.getElementById('cuisine').value;
+		//window.location = "location.html?cuisine_id="+val;
+		window.location = "location.html";
+		}
+	}
+</script>
+<!-- code to retrieve value-->
+   
+	 <script type="text/javascript" charset="utf-8">
+	 function onLoad() 
+	 {
+	       document.addEventListener("deviceready", onDeviceReady, false);
+	 }	
+    // Cordova is ready
+   function onDeviceReady()
+		{
+			alert("onDeviceReady");
+		var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+		db.transaction(populateDB, errorCB, successCB);
+		}
+ // back button
+    function onBackKeyDown() {
+		
+		var r=confirm("Are you sure you want to Exit?");
+		if (r==true)
+		  { 
+			 navigator.app.exitApp();
+		
+		  }
+		else
+		  {
+		   window.location = "index.html";
+		  }
+		
+	}
+	// Selecting Data from the database "user_details"
+	
+	function populateDB(tx)
+	{
+		 document.addEventListener("backbutton", onBackKeyDown, true);
+		tx.executeSql('CREATE TABLE IF NOT EXISTS user_details   (user_fname,user_lname,user_mobile_no,user_email_id,user_password,user_address_1,user_address_2,user_city,user_state,user_pincode,Login_state)');
+		
+		tx.executeSql('SELECT * FROM user_details', [], querySuccess, errorCB);
+	}
+	// Showing result from the table "Person_data"
+    function querySuccess(tx, results)
+	{
+		var len = results.rows.length;
+		for (var i=0; i<len; i++)
+			{
+			document.getElementById("lblname").innerHTML = results.rows.item(i).user_fname;
+			document.getElementById("lblno").innerHTML = results.rows.item(i).user_mobile_no;			
+			}
+	}
+	// If error encountered show here
+	function errorCB(err) 
+	{
+	console.log("Error processing SQL: "+err.code);
+	}
+	
+	// Transaction success callback
+	function successCB()
+	{
+	var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+	db.transaction(queryDB, errorCB);
+	}	
+	// Cordova is ready
+
+	function onDeviceReady() 
+	{
+	var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+	db.transaction(populateDB, errorCB, successCB);
+	}
+</script>
+  
+</head>
+<body  onLoad="onLoad()"> 
+
+
+<div data-role="page" id="page" >
+	<div data-role="header" data-theme="b">
+		<h4>Eat Castle</h4>
+	</div>
+ 
+    <table width="100%">    
+    <tr>
+        <td align="left"><b>NAMASTE ! </b><b><span id="lblname"></span></b></td>
+        <td align="right"><b><span id="lblno" ></span></b></td>
+    </tr>
+    </table>  
+   <h4 align="center"> What do you want to enjoy today? Just choose!</h4>
+   
+<!-- Start WOWSlider.com BODY section -->
+    <div data-role="content" align="center"> 
+    <!-- blueberry -->
+    <div class="blueberry" >
+      <center>
+        <ul class="slides"> 
+          <li ><img src="images/kitchen_adventurer_cheesecake_brownie.jpg " width="100%"/></li>
+          <li><img src="images/kitchen_adventurer_caramel.jpg"  width="100%"/></li>
+          <li><img src="images/kitchen_adventurer_donut.jpg" width="100%"/></li>
+          <li><img src="images/kitchen_adventurer_lemon.jpg" width="100%"/></li>
+          
+        </ul>
+      </center>
+    </div>
+<!-- End WOWSlider.com BODY section -->
+  
+        <div>
+        <select id="cuisine" name="cuisine"  onChange="goto()">
+        <option value="1">Burger</option>
+        <option value="2">Pizza</option>
+        <option value="3">Ice Cream</option>
+        <option value="4">Chineese</option>
+        <option value="5">Tandoori</option>
+        <option value="6">Kabab</option>
+        </select>
+          <a href="javascript:window.location = 'settings.html'" data-icon="gear" data-role="button" data-theme="b">Settings</a> 
+          
+        </div>    
+     </div>       
+</body>
+</html>

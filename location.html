@@ -1,0 +1,427 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery Mobile Web App</title>
+       
+
+<link rel="stylesheet" href="jquery-mobile/jquery.mobile.css">
+<link rel="stylesheet" href="jquery-mobile/jqm-docs.css">
+<script src="jquery-mobile/jquery.js"></script>
+<script type="text/javascript" charset="utf-8" src="jquery-mobile/cordova-2.2.0.js"></script>
+ <!--Rating css-->
+
+<script src='jquery-mobile/jquery.rating.js' type="text/javascript" language="javascript"></script>
+<link href='jquery-mobile/jquery.rating.css' type="text/css" rel="stylesheet"/>
+ 
+
+<script type="text/javascript">
+		$(document).bind("mobileinit", function()
+		{
+		$.mobile.loadingMessageTextVisible = true;
+		});
+		document.addEventListener("deviceready", onDeviceReady, false);
+		
+	function onDeviceReady()
+		{
+		var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+		db.transaction(populateDB, errorCB, successCB);
+		}
+		
+		// Selecting Data from the database "Person_data"
+	function populateDB(tx)
+		{
+		tx.executeSql('SELECT Login_state FROM user_details', [], querySuccess, errorCB);
+		}
+	 // Showing result from the table "Person_data"
+    function querySuccess(tx, results)
+		{
+				var len = results.rows.length;
+					
+			if ( results.rows.length==0 )
+				{
+				var result=confirm("Settings for the first time. (It helps you to find your favourite food joints quickly)");
+					if (result== true)
+						{
+						 window.location = 'settings.html';
+						}
+				}
+			         
+        }
+   
+    // If error encountered show here
+    function errorCB(err)
+		{
+		console.log("Error processing SQL: "+err.code);
+		}
+    // Transaction success callback
+    function successCB()
+		{
+		var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+		db.transaction(queryDB, errorCB);
+		}
+    // Cordova is ready
+		function onDeviceReady() 
+		{
+		var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+		db.transaction(populateDB, errorCB, successCB);
+		}
+	
+
+	
+<!--....... getting value from last page....-->
+			
+var queryStr = window.location.search;
+var paramPairs = queryStr.substr(1).split('&');
+var params = {};
+for (var i = 0; i < paramPairs.length; i++)
+{
+	var parts = paramPairs[i].split('=');
+	params[parts[0]] = parts[1];
+	
+}
+
+</script>
+
+<!-- ...nav bar.....-->
+
+<script>
+			$(document).delegate('[data-role="navbar"] a', 'click', function () {
+			$(this).addClass('ui-btn-active');
+			$('.content_div').hide();
+			$('#' + $(this).attr('data-href')).show();
+			return false;
+			});
+</script>
+ <!-- ... page loading theme....-->
+ 
+<script>
+			$(document).bind("mobileinit", function(){
+			$.mobile.loadingMessageTextVisible = true;
+			});
+</script>
+<script src="jquery-mobile/jquery.mobile.js"></script>
+<script>
+			$(document).on("click", ".show-page-loading-msg", function() {
+			var $this = $( this ),
+			theme = $this.jqmData("theme") || $.mobile.loadingMessageTheme,
+			msgText = $this.jqmData("msgtext") || $.mobile.loadingMessage,
+			textonly = !!$this.jqmData("textonly");
+			$.mobile.showPageLoadingMsg(theme, msgText, textonly);
+			})
+			.on("click", ".hide-page-loading-msg", function() {
+			$.mobile.hidePageLoadingMsg();
+			});
+</script>
+
+</head> 
+<body> 
+<div id="location" data-role="page" id="page" data-add-back-btn="true" data-back-btn-text="back" data-rel="back">
+    <div data-role="header" data-theme="b">
+            <h1>Eat Castle </h1>
+    </div>
+        <div data-role="content" id="content">
+            <p>Select Your City / Town :</p>
+            <select name="select-choice-8" id="select-choice-nc">
+            <option value="Kolkata">Kolkata</option>
+            <option value="Delhi">Delhi</option>
+            <option value="Mumbai">Mumbai</option>
+            <option value="Mumbai">Bangalore</option>
+            
+            <optgroup label="Uttar Pradesh">
+            <option value="firstOvernight">Noida</option>
+            <option value="expressSaver">North Delhi</option>
+            <option value="ground">South Delhi</option>
+            </optgroup>
+            
+            <optgroup label="West Bengal">
+            <option value="Murshidabad">Murshidabad</option>
+            <option value="Bardhaman">Bardhaman</option>
+            <option value="Medinipur">Medinipur</option>
+            <option value="Birbhum">Birbhum</option>
+            <option value="Bankura">Bankura</option>
+            <option value="New Jalpaiguri">New Jalpaiguri</option>
+            </optgroup>
+            
+            <optgroup label="Jammu and Kashmir">
+            <option value="Srinagar">Srinagar</option>
+            <option value="Jammu">Jammu</option>
+            <option value="Anantnag">Anantnag</option>
+            <option value="Udhampur">Udhampur</option>
+            <option value="Baramulla">Baramulla</option>
+            <option value="Leh">Leh</option>
+            </optgroup>
+            
+            <optgroup label="Andhra Pradesh">
+            <option value="Hyderabad">Hyderabad</option>
+            <option value="Vijayawada ">Vijayawada </option>
+            <option value="Warangal">Warangal</option>
+            <option value="Tirupati ">Tirupati </option>
+            <option value="Guntur">Guntur</option>
+            <option value="Nellore">Nellore</option>
+            </optgroup>
+            
+            </select>
+        </div>
+<!-- /navbar -->
+          <div data-role="navbar">
+            <ul>
+                <li><a href="#" data-href="a" data-role="button">Take Away<span > (8)</span></a></li>
+                <li><a href="#" data-href="b" data-role="button">Dine Out<span> (7)</span></a></li>
+                 <li><a href="#" data-href="c" data-role="button">Favourite<span> (5)</span></a></li>
+            </ul>
+        </div>
+        <div class="content_div"></div>
+<div id="a" class="content_div">
+     <ul data-role="listview">
+                    <li class="show-page-loading-msg "><a href="javascript:window.location = 'restaurant.html'">
+                    <img src="images/hotel1.gif" width="90" height="90"   />
+                    <h3>SKAR's Restaurant</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p>
+                    <input name="star1" type="radio" class="star" disabled="disabled"/>
+                    <input name="star1" type="radio" class="star" disabled="disabled"/>
+                    <input name="star1" type="radio" class="star" disabled="disabled" checked="checked"/>
+                    <input name="star1" type="radio" class="star" disabled="disabled"/>
+                    <input name="star1" type="radio" class="star" disabled="disabled"/>
+                    </p>
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/></p>
+                    </a>
+                    </li>
+                    
+                    <li class="show-page-loading-msg ">
+                    <a href="javascript:window.location = 'restaurant.html'" >
+                    <img src="images/hotel1.gif" width="90" height="90" />
+                    <h3>Neela Mam's Restaurant</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p> 
+                    <input name="star2" type="radio" class="star" disabled="disabled"/>
+                    <input name="star2" type="radio" class="star"  disabled="disabled"/>                    <input name="star2" type="radio" class="star"  disabled="disabled">
+                    <input name="star2" type="radio" class="star" disabled="disabled" checked="checked"/>
+                     <input name="star2" type="radio" class="star"  disabled="disabled">
+                    </p> 
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/>
+                    </p>
+                    </a>
+                    </li>
+                    
+                    <li class="show-page-loading-msg ">
+                    <a href="javascript:window.location = 'restaurant.html'">
+                    <img src="images/hotel1.gif"  width="90" height="90" />
+                    <h3>Arindam Sir restaurant</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p> 
+                    <input name="star3" type="radio" class="star" disabled="disabled"/>
+                    <input name="star3" type="radio" class="star" disabled="disabled"/>
+                    <input name="star3" type="radio" class="star" disabled="disabled"/>
+                    <input name="star3" type="radio" class="star"checked="checked" disabled="disabled"/>
+                    <input name="star3" type="radio" class="star" disabled="disabled"/>
+                    </p>
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/>
+                    </p>
+                    </a>
+                    </li>
+                    <li class="show-page-loading-msg ">
+                    <a href="javascript:window.location = 'restaurant.html'" >
+                    <img src="images/hotel1.gif"  width="90" height="90" />
+                    <h3>Pizza Hut</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p> 
+                    <input name="star4" type="radio" class="star"  disabled="disabled"/>
+                    <input name="star4" type="radio" class="star" disabled="disabled"/>
+                    <input name="star4" type="radio" class="star" disabled="disabled"/>
+                    <input name="star4" type="radio" class="star"checked="checked" disabled="disabled"/>
+                    <input name="star4" type="radio" class="star"  disabled="disabled"/>
+                    </p>
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/></p>
+                    </a>
+                    </li>
+        
+                     
+       </ul>
+  </div>
+                  
+            
+  <div id="b" class="content_div">
+     <ul data-role="listview">
+                    <li class="show-page-loading-msg ">
+                    <a href="javascript:window.location = 'restaurant.html'">
+                    <img src="images/hotel1.gif" width="90" height="90"   />
+                    <h3>Kirmizi Biber</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p>
+                    <input name="star7" type="radio" class="star" disabled="disabled"/>
+                    <input name="star7" type="radio" class="star" disabled="disabled"/>
+                    <input name="star7" type="radio" class="star" disabled="disabled" checked="checked"/>
+                    <input name="star7" type="radio" class="star" disabled="disabled"/>
+                    <input name="star7" type="radio" class="star" disabled="disabled"/>
+                    </p>
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/>
+                    </p>
+                    </a>
+                    </li>
+			
+                    <li class="show-page-loading-msg ">
+                    <a href="javascript:window.location = 'restaurant.html'" >
+                    <img src="images/hotel1.gif" width="90" height="90" />
+                    <h3>Peace Food</h3>
+                    <p>Description</p>
+                    
+                    <p>Speciality about the resto</p>
+                    <p>
+                    <input name="star8" type="radio" class="star"  disabled="disabled"/> 
+                    <input name="star8" type="radio" class="star"  disabled="disabled"/>
+                    <input name="star8" type="radio" class="star"  disabled="disabled"/>
+                    <input name="star8" type="radio" class="star8"  disabled="disabled">
+                    <input name="star8" type="radio" class="star"  disabled="disabled" checked="checked"/>
+                    </p> 
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/></p>
+                    </a>
+                    </li>
+            
+                    <li class="show-page-loading-msg "><a href="javascript:window.location = 'restaurant.html'">
+                    <img src="images/hotel1.gif"  width="90" height="90" />
+                    <h3>Pizzeria</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p> 
+                    
+                    <input name="star9" type="radio" class="star" disabled="disabled"/>
+                    <input name="star9" type="radio" class="star" disabled="disabled"/>
+                    <input name="star9" type="radio" class="star"disabled="disabled"/>
+                    <input name="star9" type="radio" class="star" checked="checked" disabled="disabled"/>
+                    <input name="star9" type="radio" class="star" disabled="disabled"/>
+                    </p>
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/>
+                    </p>
+                    </a>
+                    </li>
+                    <li class="show-page-loading-msg "><a href="javascript:window.location = 'restaurant.html'" >
+                    <img src="images/hotel1.gif"  width="90" height="90" />
+                    <h3>Pizza Hut</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p>
+                    <input name="star10" type="radio" class="star"  disabled="disabled"/> 
+                    <input name="star10" type="radio" class="star" disabled="disabled"/>
+                    <input name="star10" type="radio" class="star"  disabled="disabled"/>
+                    <input name="star10" type="radio" class="star" checked="checked" disabled="disabled"/>
+                    <input name="star10" type="radio" class="star" disabled="disabled"/>
+                    </p>
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/>
+                    </p>
+                    </a>
+                    </li>
+
+                    
+                    
+         </ul>
+   </div>  
+   <div id="c" class="content_div">
+     <ul data-role="listview">
+                    <li class="show-page-loading-msg ">
+                    <a href="javascript:window.location = 'restaurant.html'">
+                    <img src="images/hotel1.gif" width="90" height="90"   />
+                    <h3> Biber</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p>
+                    <input name="star13" type="radio" class="star" disabled="disabled"/>
+                    <input name="star13" type="radio" class="star" disabled="disabled"/>
+                    <input name="star13" type="radio" class="star" disabled="disabled" checked="checked"/>
+                    <input name="star13" type="radio" class="star" disabled="disabled"/>
+                    <input name="star13" type="radio" class="star" disabled="disabled"/>
+                    </p>
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/>
+                    </p>
+                    </a>
+                    </li>
+			
+                    <li class="show-page-loading-msg ">
+                    <a href="javascript:window.location = 'restaurant.html'" >
+                    <img src="images/hotel1.gif" width="90" height="90" />
+                    <h3>Peace Food</h3>
+                    <p>Description</p>
+                    
+                    <p>Speciality about the resto</p>
+                    <p>
+                   <input name="star14" type="radio" class="star"  disabled="disabled"/> 
+                    <input name="star14" type="radio" class="star"  disabled="disabled"/>
+                    <input name="star14" type="radio" class="star"  disabled="disabled"/>
+                    <input name="star14" type="radio" class="star8"  disabled="disabled">
+                    <input name="star14" type="radio" class="star"  disabled="disabled" checked="checked"/>
+                    </p> 
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/></p>
+                    </a>
+                    </li>
+            
+                    <li class="show-page-loading-msg "><a href="javascript:window.location = 'restaurant.html'">
+                    <img src="images/hotel1.gif"  width="90" height="90" />
+                    <h3>Pizzeria</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p> 
+                    
+                    <input name="star15" type="radio" class="star" disabled="disabled"/>
+                    <input name="star15" type="radio" class="star" disabled="disabled"/>
+                    <input name="star15" type="radio" class="star"disabled="disabled"/>
+                    <input name="star15" type="radio" class="star" checked="checked" disabled="disabled"/>
+                    <input name="star15" type="radio" class="star" disabled="disabled"/>
+                    </p>
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/>
+                    </p>
+                    </a>
+                    </li>
+                    <li class="show-page-loading-msg "><a href="javascript:window.location = 'restaurant.html'" >
+                    <img src="images/hotel1.gif"  width="90" height="90" />
+                    <h3>Pizza Hut</h3>
+                    <p>Description</p>
+                    <p>Speciality about the resto</p>
+                    <p>
+                    <input name="star16" type="radio" class="star"  disabled="disabled"/> 
+                    <input name="star16" type="radio" class="star" disabled="disabled"/>
+                    <input name="star16" type="radio" class="star"  disabled="disabled"/>
+                    <input name="star16" type="radio" class="star" checked="checked" disabled="disabled"/>
+                    <input name="star16" type="radio" class="star" disabled="disabled"/>
+                    </p>
+                    <p> <img src="images/parking1.gif"  width="15" height="15"/>
+                    <img src="images/wifi.png"  width="15" height="15"/>
+                    <img src="images/ac.jpg"  width="15" height="15"/>
+                    </p>
+                    </a>
+                    </li>
+
+                    
+                    
+         </ul>
+   </div>  
+</div>
+</body>
+</html>

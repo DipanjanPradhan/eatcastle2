@@ -1,0 +1,196 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery Mobile Web App</title>
+
+       
+<!--Jquery mobile theme-->
+<link rel="stylesheet" href="jquery-mobile/jquery.mobile.css">
+<link rel="stylesheet" href="jquery-mobile/jqm-docs.css">
+<script src="jquery-mobile/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="jquery-mobile/cordova-2.2.0.js"></script>
+<script type="text/javascript" charset="utf-8">
+	var flag =1 ;
+	var click=0;
+	document.addEventListener("deviceready", onDeviceReady, false);
+	// Wait for Cordova to load
+	function saveIt()
+	{
+	click=1;
+	document.addEventListener("deviceready", onDeviceReady, false);
+	}
+	
+	// Cordova is ready  Creating a Database named eatcastle2_db
+	function onDeviceReady()
+	{
+	var db = window.openDatabase("eatcastle2_db", "1.0", "eatcastle2 Database", 200000);
+	db.transaction(populateDB, errorCB, successCB);
+	}
+	
+	// Selecting Data from the database "user_details"
+	function populateDB(tx) 
+	{
+	tx.executeSql('SELECT * FROM user_details', [], querySuccess, errorCB);
+	}
+	
+	// Showing result from the table "user_details"
+	function querySuccess(tx, results) 
+	{ 
+	
+	var len = results.rows.length;
+	// cheking data in eatcastle2_db and first time page load event
+	if (len==1 && flag==1)
+		{
+		for (var i=0; i<len; i++)
+			{
+			if(results.rows.item(i).Login_state == 1)
+				{
+				document.getElementById('fname').value=results.rows.item(0).user_fname;
+				document.getElementById('lname').value=results.rows.item(0).user_lname;
+				document.getElementById('no').value=results.rows.item(0).user_mobile_no;
+				document.getElementById('email').value=results.rows.item(0).user_email_id;
+				document.getElementById('pwd').value=results.rows.item(0).user_password;
+				document.getElementById('add1').value=results.rows.item(0).user_address_1;
+				document.getElementById('add2').value=results.rows.item(0).user_address_2;
+				document.getElementById('city').value=results.rows.item(0).user_city;
+				document.getElementById('st').value=results.rows.item(0).user_state;
+				document.getElementById('code').value=results.rows.item(0).user_pincode;
+				flag=0;
+				break;
+				}
+		     }
+		}
+	
+	var fname   = document.getElementById('fname').value;
+	var lname   = document.getElementById('lname').value;
+	var no      = document.getElementById('no').value;
+	var email   = document.getElementById('email').value;
+	var pwd     = document.getElementById('pwd').value;
+	var add1     = document.getElementById('add1').value;
+	var add2     = document.getElementById('add2').value;
+	var city    = document.getElementById('city').value;
+	var st      = document.getElementById('st').value;
+	var code    = document.getElementById('code').value;
+	//If data is not present in eatcastle2_db and   save  button is clicked.
+	if(click == 1)
+	{
+	if  ( len == 0 && document.getElementById("checkbox-1").checked == 0  )
+		{
+		var url     = 'INSERT INTO user_details       (user_fname,user_lname,user_mobile_no,user_email_id,user_password,user_address_1,user_address_2,user_city,user_state,user_pincode,Login_state) VALUES ("'+fname+'", "'+lname+'",'+no+', "'+email+'", "'+pwd+'", "'+add1+'", "'+add2+'", "'+city+'", "'+st+'", '+code+',1)';
+		tx.executeSql(url);
+		window.location = 'index.html';
+		}
+		//If data is  present in eatcastle2_db and  update check box  is selected.
+	else if( document.getElementById("checkbox-0").checked == 1 && len !=0)
+		
+			{
+			
+					 var number =results.rows.item(0).user_mobile_no;
+					tx.executeSql('UPDATE user_details SET user_fname="'+fname+'",user_lname="'+lname+'",user_mobile_no='+no+',user_email_id= "'+email+'",user_password="'+pwd+'",user_address_1="'+add1+'",user_address_2="'+add2+'",user_city="'+city+'",user_state= "'+st+'",user_pincode='+code+' where user_mobile_no='+number+'');
+					
+					window.location = 'index.html';
+					
+					
+				
+			}
+	
+	  }
+	}
+	
+	// If error encountered show here
+	function errorCB(err) 
+	{
+	console.log("Error processing SQL: "+err.code);
+	}
+	
+	// Transaction success callback
+	function successCB() 
+	{
+	var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+	db.transaction(queryDB, errorCB);
+	}
+	
+	// Cordova is ready
+	function onDeviceReady() 
+	{
+	var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+	db.transaction(populateDB, errorCB, successCB);
+	}
+
+	<!--...... Show password javascript function......	-->
+	
+	function showpwd()
+	{
+	if( document.getElementById("checkbox-1").checked == 1)
+	{     
+	document.getElementById("pwd").type='text';
+	}
+	else
+	{
+	document.getElementById("pwd").type='password';	
+	}
+	}
+</script>
+<!--page loading javascript code-->
+<script>
+	$(document).bind("mobileinit", function(){
+	$.mobile.loadingMessageTextVisible = true;
+	});
+</script>
+<script src="jquery-mobile/jquery.mobile.js"></script>
+<script>
+	$(document).on("click", ".show-page-loading-msg", function() {
+	var $this = $( this ),
+	theme = $this.jqmData("theme") || $.mobile.loadingMessageTheme,
+	msgText = $this.jqmData("msgtext") || $.mobile.loadingMessage,
+	textonly = !!$this.jqmData("textonly");
+	$.mobile.showPageLoadingMsg(theme, msgText, textonly);
+	})
+	.on("click", ".hide-page-loading-msg", function() {
+	$.mobile.hidePageLoadingMsg();
+	});
+</script>
+  
+</head> 
+<body> 
+
+<div data-role="page" id="page" >
+	<div data-role="header" data-theme="b">
+		<h1>Settings</h1>
+	</div>
+	<div data-role="content" data-theme="b">	
+    <label><b> Personal Settings </b></label>
+     <input type="text"  id="fname" value="" placeholder=" FirstName" data-theme="a" />
+     <input type="text"  id="lname" value="" placeholder=" LastName" data-theme="a" />
+     <input type="number"  id="no" value="" placeholder="Mobile No" data-theme="a" />
+     <input type="email"  id="email" value="" placeholder=" Email ID" data-theme="a" />
+             (Helps You to sign in at the Portal)
+    <table>    
+    <tr>
+        <td > 
+        <input type="password"  id="pwd" value="" placeholder=" Password" data-theme="a" />
+        </td>
+        <td></td><td></td>
+        <td>
+        <input type="checkbox" name="checkbox-1" onClick="showpwd()"  id="checkbox-1" data-theme="c"/>
+        <label for="checkbox-1">Show Password</label>
+        </td>
+    </tr>
+    </table>   
+               
+    <label><b> Deliver my food at </b></label>
+    <input type="text"  id="add1" value="" placeholder="Address Line 1" data-theme="a" />
+    <input type="text"  id="add2" value="" placeholder="Address Line 2" data-theme="a" />
+    <input type="text"  id="city" value="" placeholder="City/Town" data-theme="a" />    
+    <input type="text" name="state" id="st" value="" placeholder="State" data-theme="a" />
+    <input type="number"  id="code" value="" placeholder="Postal code" data-theme="a" /> 
+	<label><input type="checkbox" name="checkbox-0" data-theme="c" id="checkbox-0"/>Update initial settings </label>	         
+   <a href="#" style="text-decoration:none">
+   <button class="show-page-loading-msg ui-btn-hidden"onClick="saveIt()">Save</button></a>
+   </div>
+</div>
+
+</body>
+</html>

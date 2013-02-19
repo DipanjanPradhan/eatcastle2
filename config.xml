@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<widget xmlns = "http://www.w3.org/ns/widgets"
+    xmlns:gap = "http://phonegap.com/ns/1.0"
+    id        = "com.ec.eatcastle2"
+    version   = "1.0.0">
+
+<name>Eatcastle version 3</name>
+
+<description>
+A simple PhoneGap Build application.
+</description>
+
+<author href="https://example.com" email="you@example.com">
+Your Name
+</author>
+<preference name="show-splash-screen-spinner" value="false" />
+<preference name="load-url-timeout" value="180000" />
+ <gap:splash src="newloading.png"/>
+</widget>

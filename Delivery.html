@@ -1,0 +1,180 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>jQuery Mobile Web App</title>
+
+<!--Jquery mobile theme-->
+<link rel="stylesheet" href="jquery-mobile/jquery.mobile.css">
+<link rel="stylesheet" href="jquery-mobile/jqm-docs.css">
+<script src="jquery-mobile/jquery.js"></script>
+
+<script type="text/javascript" charset="utf-8" src="jquery-mobile/cordova-2.2.0.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+    var flag =1 ;
+	var click=0;
+	document.addEventListener("deviceready", onDeviceReady, false);
+	function saveIt()
+	{
+	flag=0;
+	click=1;
+	document.addEventListener("deviceready", onDeviceReady, false);
+	}
+	// Cordova is ready,Creating a Database named eatcastle2_db
+	function onDeviceReady()
+	{
+	var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+	db.transaction(populateDB, errorCB, successCB);
+	}
+	
+	// Selecting Data from the database "user_details"
+	function populateDB(tx) 
+	{
+	tx.executeSql('SELECT * FROM user_details', [], querySuccess, errorCB);
+	}
+	
+	// Showing result from the table "user_details"
+	function querySuccess(tx, results) 
+	{
+	var len = results.rows.length;
+			
+	     if (len==1 && flag==1)
+		 {
+			 for (var i=0; i<len; i++)
+			     {
+			 if(results.rows.item(0).Login_state == 1 )
+				      {
+				
+			document.getElementById('add1').value=results.rows.item(0).user_address_1;
+			document.getElementById('add2').value=results.rows.item(0).user_address_2;
+			document.getElementById('city').value=results.rows.item(0).user_city;
+			document.getElementById('st').value=results.rows.item(0).user_state;
+			document.getElementById('code').value=results.rows.item(0).user_pincode;	
+				flag=0;
+				break;
+			
+					  }
+				}
+		 }
+		     
+				var add1     = document.getElementById('add1').value;
+				var add2     = document.getElementById('add2').value;
+				var city    = document.getElementById('city').value;
+				var st      = document.getElementById('st').value;
+				var code    = document.getElementById('code').value;
+				
+				
+		  if (click==1)
+		  {
+		    if(  document.getElementById("checkbox-1").checked == 1 )
+			{
+			var number =results.rows.item(0).user_mobile_no;
+			tx.executeSql('UPDATE user_details SET user_address_1="'+add1+'",user_address_2="'+add2+'",user_city="'+city+'",user_state= "'+st+'",user_pincode='+code+'');
+			
+			window.location = 'order1.html';	
+			}
+			else 
+			{
+				window.location = 'order1.html';
+			}
+		  }
+	 
+		// if there is no data in eatcastle2_db 		
+}
+	
+	// If error encountered show here
+	function errorCB(err) 
+	{
+	console.log("Error processing SQL: "+err.code);
+	}
+	// Transaction success callback
+	function successCB() 
+	{
+	var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+	db.transaction(queryDB, errorCB);
+	}
+	// Cordova is ready
+	function onDeviceReady() 
+	{
+	var db = window.openDatabase("eatcastle2_db", "1.0", "Cordova Demo", 200000);
+	db.transaction(populateDB, errorCB, successCB);
+	}
+</script>
+<!--page loading javascript code-->
+<script>
+	$(document).bind("mobileinit", function(){
+	$.mobile.loadingMessageTextVisible = true;
+	});
+</script>
+<script src="jquery-mobile/jquery.mobile.js"></script>
+<script>
+	$(document).on("click", ".show-page-loading-msg", function() {
+	var $this = $( this ),
+	theme = $this.jqmData("theme") || $.mobile.loadingMessageTheme,
+	msgText = $this.jqmData("msgtext") || $.mobile.loadingMessage,
+	textonly = !!$this.jqmData("textonly");
+	$.mobile.showPageLoadingMsg(theme, msgText, textonly);
+	})
+	.on("click", ".hide-page-loading-msg", function() {
+	$.mobile.hidePageLoadingMsg();
+	});
+</script> 
+ 
+</head> 
+<body> 
+<div data-role="page" id="page" >
+        <div data-role="header" data-theme="b">
+            <h1>Deliver my food at</h1>
+        </div>
+        <div data-role="content" >
+        <label><b>You have ordered</b></label>
+        <table width="100%">
+            <tr>
+               <td>1</td><td> chicken Biryani</td><td></td><td>Rs 80</td>
+            </tr>
+            <tr>
+                <td>2</td><td>Plain Rice</td><td></td><td>Rs 120</td>
+            </tr>
+            <tr>
+                <td>1</td><td>Chicken kassa</td><td></td><td>Rs 180</td>
+            </tr>
+            <tr>
+                <td></td><td>Subtotal</td><td></td><td>Rs 360</td>
+            </tr>
+             <tr>
+                <td></td><td >Tax</td><td></td><td>Rs 14.5</td>
+            </tr>
+          
+        </table>
+         <hr>
+         <table width="100%">
+         <tr style=" border-right-style: solid">
+              <td width="68%" ><b>Total Bill</b></td>
+              <td width="32%">Rs 374.5</td>
+          </tr>
+           </table>
+         <label><b> Deliver my food at </b></label>
+      
+        <input type="text" name="add1" id="add1" value=""  placeholder="Enter Your Address Line1" data-theme="a" />
+             
+        
+        <input type="text" name="add2" id="add2" value=""  placeholder="Enter Your Address Line2" data-theme="a" />
+               
+        
+        <input type="text" name="city" id="city" value=""  placeholder="Enter Your City/Town" data-theme="a"/>
+                  
+         
+        <input type="text" name="st" id="st" value=""  placeholder="Enter Your State" data-theme="a"/> 
+        
+        <input type="number" name="code" id="code" value=""  placeholder="Enter Your Pincode" data-theme="a"/>
+      
+         
+            <input type="checkbox" name="checkbox-1"  id="checkbox-1" data-theme="c"/>
+        <label for="checkbox-1" id="lblchk">Update initial settings</label>
+ <a href="#" style="text-decoration:none">
+<button class="show-page-loading-msg ui-btn-hidden" data-theme="b" id="Continue" onClick="saveIt()">Confirm order</button></a>
+        </div>
+</div>
+</body>
+</html>
